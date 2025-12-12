@@ -83,11 +83,12 @@ def login(request):
     
     
     
-from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.decorators import authentication_classes, permission_classes, renderer_classes
 
 @api_view(['get'])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
 @permission_classes([IsAuthenticated])
+@renderer_classes([JSONRenderer])
 def request_user_profile(request):
     obj_user = request.user
     user_profile = profile.objects.filter(user=request.user).first()
@@ -103,6 +104,7 @@ from django.contrib.auth.models import Group
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication, SessionAuthentication])
 @permission_classes([IsAuthenticated, isAdminUser])
+@renderer_classes([JSONRenderer])
 def Adding_user_to_group(request, group_name, user_id):
     try:
         group_name = group_name.upper()
@@ -128,6 +130,7 @@ def Adding_user_to_group(request, group_name, user_id):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication, SessionAuthentication])
 @permission_classes([IsAuthenticated, isAdminUser])
+@renderer_classes([JSONRenderer])
 def remove_user_to_group(request, group_name, user_id):
     try:
         group_name = group_name.upper()
@@ -157,10 +160,11 @@ def remove_user_to_group(request, group_name, user_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
+@renderer_classes([JSONRenderer])
 def logout(request):
     user = request.user
     try:
-        token_obj = user.auth_token.delete()
+        user.auth_token.delete()
     except:
         return Response({'MESSAGE': 'user token not found..'})
     return Response({'MESSAGE': 'token deleted you are now log out..'})
@@ -170,8 +174,9 @@ def logout(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([isTutorOrAdmin])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
+@renderer_classes([JSONRenderer])
 def group_members(request, group_name):
     group_name = group_name.upper()
     group_obj = User.objects.filter(groups__name=group_name)
@@ -189,6 +194,7 @@ def group_members(request, group_name):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, isTutorOrAdmin])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
+@renderer_classes([JSONRenderer])
 def statistics(request):
     question_obj = question.objects.count()
     users = User.objects.count()
@@ -208,7 +214,11 @@ def statistics(request):
         }
     return Response(data)
 
+
+
+
 class profileview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request):
         obj = profile.objects.all()
         serializer = profileSerializer(obj, many=True)
@@ -223,7 +233,7 @@ class profileview(APIView):
     
     def get_permissions(self):
         if self.request.method == 'GET':
-            return [isAdminUser()]
+            return [isTutorOrAdmin()]
         else:
             return [isAdminUser()]
         
@@ -232,6 +242,7 @@ class profileview(APIView):
 
 
 class profileinstanceview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request, pk):
         try:
             obj = profile.objects.get(id=pk)
@@ -274,6 +285,7 @@ class profileinstanceview(APIView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
+@renderer_classes([JSONRenderer])
 def userQs(request):
     user = request.user
     profile_obj = profile.objects.get(user=user)
@@ -283,7 +295,7 @@ def userQs(request):
 
 
 class questionview(APIView):
-    # renderer_classes = [JSONRenderer]
+    renderer_classes = [JSONRenderer]
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication, SessionAuthentication]
 
@@ -323,7 +335,7 @@ class questionview(APIView):
 
 
 class questioninstanceview(APIView):
-    # renderer_classes = [JSONRenderer]
+    renderer_classes = [JSONRenderer]
 
     def get(self, request, pk):
         obj = question.objects.get(id=pk)
@@ -356,6 +368,7 @@ class questioninstanceview(APIView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, isTutorOrAdmin])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
+@renderer_classes([JSONRenderer])
 def adminAns(request):
     user = request.user
     answer_obj = answer.objects.filter(tutor_answered=user)
@@ -365,6 +378,7 @@ def adminAns(request):
 
 
 class answeerview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request):
         obj = answer.objects.all()
         serializer = answerSerializer(obj, many=True)
@@ -389,6 +403,7 @@ class answeerview(APIView):
 
 
 class answerinstanceview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request, pk):
         obj = answer.objects.get(id=pk)
         serializer = answerSerializer(obj)
@@ -422,6 +437,7 @@ from .serializer import notifiactionSerializer
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @authentication_classes([SessionAuthentication, TokenAuthentication])
+@renderer_classes([JSONRenderer])
 def notifications(request):
     user = request.user
     try:
@@ -431,7 +447,10 @@ def notifications(request):
     serializer = notifiactionSerializer(notification_obj)
     return Response(serializer.data)
 
+
+
 class newsview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request):
         obj = news.objects.all()
         serializer = newsSerializer(obj, many=True)
@@ -457,6 +476,7 @@ class newsview(APIView):
 
 
 class newsinstanceview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request, pk):
         obj = news.objects.get(id=pk)
         serializer = newsSerializer(obj)
@@ -488,6 +508,7 @@ class newsinstanceview(APIView):
 
 
 class e_bookview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request):
         obj = e_book.objects.all()
         serializer = e_bookSerializer(obj, many=True)
@@ -511,6 +532,7 @@ class e_bookview(APIView):
 
 
 class e_bookinstanceview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request, pk):
         obj = e_book.objects.get(id=pk)
         serializer = e_bookSerializer(obj)
@@ -540,6 +562,7 @@ class e_bookinstanceview(APIView):
 
 
 class AI_chatroomview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request):
         obj = AI_Chatroom.objects.filter(user=request.user)
         serializer = e_bookSerializer(obj, many=True)
@@ -557,6 +580,7 @@ class AI_chatroomview(APIView):
 
 
 class AI_chatroominstanceview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request, pk):
         obj = AI_Chatroom.objects.get(id=pk)
         serializer = AI_ChatroomSerializer(obj)
@@ -580,6 +604,7 @@ class AI_chatroominstanceview(APIView):
 
 
 class AI_promptview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request):
         obj = AI_Prompt.objects.filter(user=request.user)
         serializer = AI_promptserializer(obj, many=True)
@@ -597,6 +622,7 @@ class AI_promptview(APIView):
 
 
 class AI_promptinstanceview(APIView):
+    renderer_classes = [JSONRenderer]
     def get(self, request, pk):
         obj = AI_Prompt.objects.get(id=pk)
         serializer = AI_promptserializer(obj)

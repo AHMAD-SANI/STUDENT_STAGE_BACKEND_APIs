@@ -40,3 +40,5 @@ urlpatterns = [
     path('ebook/<int:pk>', e_bookinstanceview.as_view()),
     
 ]
+
+

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'STUDENT_STAGE_APIs',
 
     #THIRD PARTY APPS
-    'corsheaders'
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',

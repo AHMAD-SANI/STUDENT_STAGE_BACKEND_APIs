@@ -25,7 +25,7 @@ urlpatterns = [
     path('removetogroup/<str:group_name>/<int:user_id>', remove_user_to_group),
     path('group_members/<str:group_name>/', group_members),
     path('me', request_user_profile),
-    path('mnotifications', notifications),
+    path('notifications', notifications),
     path('profiles/<int:pk>', profileinstanceview.as_view()),
     path('profiles/', profileview.as_view()),
     path('statistics', statistics),

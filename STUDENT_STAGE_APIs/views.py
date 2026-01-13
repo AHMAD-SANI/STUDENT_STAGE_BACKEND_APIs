@@ -77,7 +77,8 @@ def login(request):
                     'Access Token': Access_token.key,
                     }
                 return Response(key)
-            return Response({'message': 'such user doesnt exist with the informations provided'})
+            else:
+                return Response({'message': 'such user doesnt exist with the informations provided'})
         return Response({'message': 'the password field cannot be empty'})
     return Response({'message': 'the email cannot be empty'})
     

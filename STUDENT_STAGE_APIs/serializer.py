@@ -132,6 +132,8 @@ class e_bookSerializer(serializers.ModelSerializer):
         fields = [
                 'id',
                 'book_name', 
+                'book_file',
+                'book_poster',
                 'book_price', 
                 'book_publisher', 
                 'book_category', 

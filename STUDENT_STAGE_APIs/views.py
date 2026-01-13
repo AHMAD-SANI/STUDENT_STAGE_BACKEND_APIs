@@ -441,12 +441,12 @@ from .serializer import notifiactionSerializer
 @renderer_classes([JSONRenderer])
 def notifications(request):
     user = request.user
-    try:
-        notification_obj = notifiaction.objects.filter(reciever=user)
-    except:
-        return Response({'MESSAGE': 'user token not found..'})
-    serializer = notifiactionSerializer(notification_obj)
-    return Response(serializer.data)
+    notification_obj = notifiaction.objects.filter(reciever=user)
+    if not notification_obj:
+        return Response({'MESSAGE': 'No any message for this user..'})
+    else:
+        serializer = notifiactionSerializer(notification_obj, many=True)
+        return Response(serializer.data)
 
 
 

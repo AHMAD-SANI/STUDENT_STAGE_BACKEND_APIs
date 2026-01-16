@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 import uuid
+from cloudinary.models import CloudinaryField
 
 
 User = get_user_model()
@@ -9,7 +10,7 @@ User = get_user_model()
 class profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100, blank=True)
-    image = models.ImageField(upload_to='media/profile_images', blank=True)
+    image = CloudinaryField('image', blank=True, null=True)
     address = models.TextField(blank=True)
     role  = models.CharField(max_length=100, blank=True)
     date_joined = models.DateTimeField(auto_now=True)
@@ -26,7 +27,7 @@ class question(models.Model):
     profile = models.ForeignKey(profile, on_delete=models.CASCADE, null=False)
     tutor_assign = models.ForeignKey(User, related_name='tutor_assign', blank=True, null=True, on_delete=models.CASCADE)
     question_text = models.TextField()
-    question_image = models.ImageField(upload_to='media/questions_images', blank=True)
+    question_image = CloudinaryField('image', blank=True, null=True)
     date = models.DateTimeField(auto_now=True)
     question_catagory = models.CharField(max_length=100)
     answer_id = models.IntegerField(blank=True, default=0)
@@ -41,7 +42,7 @@ class answer(models.Model):
     tutor_answered = models.ForeignKey(User, on_delete=models.CASCADE)
     answer_title = models.TextField(blank=True)
     answer_body = models.TextField()
-    answer_image = models.ImageField(upload_to='media/answer_images', blank=True)
+    answer_image = CloudinaryField('image', blank=True, null=True)
     answer_feedback = models.TextField(blank=True)
 
     def __str__(self):
@@ -62,8 +63,8 @@ class notifiaction(models.Model):
 
 class e_book(models.Model):
     book_name = models.CharField(max_length=200)
-    book_file  = models.FileField(upload_to='media/e_books_files', blank=True, null=True)
-    book_poster  = models.FileField(upload_to='media/e_books_posters', blank=True, null=True)
+    book_file  = CloudinaryField('file', resource_type='raw', blank=True, null=True)
+    book_poster  = CloudinaryField('image', blank=True, null=True)
     book_price = models.DecimalField(default=0.00, max_digits=12, decimal_places=2)
     book_publisher = models.CharField(max_length=200)
     book_summery = models.TextField(blank=True)
@@ -82,8 +83,8 @@ class news(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     news_title = models.TextField(blank=True)
     news_body = models.TextField()
-    news_images = models.ImageField(upload_to='media/news_images', blank=True)
-    news_clip = models.FileField(upload_to='media/news_clips', blank=True)
+    news_images =CloudinaryField('image', blank=True, null=True)
+    news_clip = CloudinaryField('image', blank=True, null=True)
     sector = models.CharField(max_length=100, blank=True)
     reference = models.CharField(max_length=100, blank=True)
     date_published = models.DateTimeField(auto_now=True)

@@ -337,6 +337,12 @@ class questionview(APIView):
 
 class questioninstanceview(APIView):
     renderer_classes = [JSONRenderer]
+    
+    def get_permissions(self):
+        if self.request.method in ['GET']:
+            return [AllowAny()]
+        else:
+            return [owner_Tutor_Admin()]
 
     def get(self, request, pk):
         obj = question.objects.get(id=pk)
@@ -358,11 +364,7 @@ class questioninstanceview(APIView):
             return Response({'mesage': 'object have been deleted'})
         return Response({'message': 'object does not found'})
     
-    def get_permissions(self):
-        if self.request.method in ['GET']:
-            return [AllowAny()]
-        else:
-            return [owner_Tutor_Admin()]
+   
 
 
 

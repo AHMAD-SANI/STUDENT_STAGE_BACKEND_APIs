@@ -65,25 +65,30 @@ def register(request):
 def login(request):
     email = request.data['email']
     password = request.data['password']
-    if email != None:
-        if password != None:
-            user = User.objects.get(email=email, password=password)
-            if user:
-                serializer = UserSerializer(user)
-                user_login = authenticate(user)
-                Access_token, created = Token.objects.get_or_create(user=user)
-                key = {
-                    'user': serializer.data,
-                    'Access Token': Access_token.key,
-                    }
-                return Response(key)
-            else:
-                return Response({'message': 'such user doesnt exist with the informations provided'})
-        return Response({'message': 'the password field cannot be empty'})
-    return Response({'message': 'the email cannot be empty'})
+    is_valid = True
     
+    if not User.objects.get(email=email):
+        is_valid = False
+        return Response({'message': 'Invalid Email Address'})
     
+    if not User.objects.get(email=email, password=password):
+        is_valid = False
+        return Response({'message': 'Incorrect Password.'})
     
+    if  is_valid:
+        user = User.objects.get(email=email, password=password)
+        if user:
+            serializer = UserSerializer(user)
+            user_login = authenticate(user)
+            Access_token, created = Token.objects.get_or_create(user=user)
+            key = {
+                'user': serializer.data,
+                'Access Token': Access_token.key,
+                }
+            return Response(key)
+        else:
+            return Response({'message': 'User Not Found 404.'})
+
 from rest_framework.decorators import authentication_classes, permission_classes, renderer_classes
 
 @api_view(['get'])

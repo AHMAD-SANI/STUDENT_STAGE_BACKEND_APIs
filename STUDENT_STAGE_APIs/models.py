@@ -10,7 +10,7 @@ User = get_user_model()
 class profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=100, blank=True)
-    image = CloudinaryField('image', blank=True, null=True, default='5856_vugfvg')
+    image = CloudinaryField('image', default='https://res.cloudinary.com/dtujdjabx/image/upload/v1774045545/5856_okbq3t.jpg')
     address = models.TextField(blank=True)
     role  = models.CharField(max_length=100, blank=True)
     date_joined = models.DateTimeField(auto_now=True)

@@ -12,3 +12,11 @@ admin.site.register(news)
 admin.site.register(e_book)
 admin.site.register(AI_Prompt)
 admin.site.register(AI_Chatroom)
+
+
+
+
+# ADMIN HEADER
+admin.site.site_header = 'STUDENT STAGE.'
+admin.site.site_title = 'STUDENT STAGE ADMIN SITE.'
+admin.site.index_title = 'STUDENT STAGE AMIN SITE.' 

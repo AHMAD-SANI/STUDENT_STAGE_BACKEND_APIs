@@ -123,7 +123,7 @@ WSGI_APPLICATION = 'STUDENT_STAGE.wsgi.application'
 
 DATABASES = {
     
-    'default': dj_database_url.parse('postgresql://student_stage_database_cufy_user:YrMLdUcyyk7Ou6mgoJdPk08BXbc5DX4I@dpg-d6us1h1j16oc738sn9a0-a.oregon-postgres.render.com/student_stage_database_cufy'),
+    'default': dj_database_url.parse(os.environ.get("DATABASE_URL", "postgresql://student_stage_database_ifej_user:IJLdUHylujlUILEvWGBdhBJHcI6y5VGw@dpg-d8dk7gn40ujc73cpmc6g-a.oregon-postgres.render.com/student_stage_database_ifej")),
 
 }
 
